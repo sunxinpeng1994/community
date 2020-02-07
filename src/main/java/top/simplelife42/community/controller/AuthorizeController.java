@@ -11,6 +11,8 @@ import top.simplelife42.community.dto.AccesstokenDTO;
 import top.simplelife42.community.dto.GithubUser;
 import top.simplelife42.community.provider.GithubProvider;
 
+import javax.servlet.http.HttpServletRequest;
+
 @Controller
 public class AuthorizeController {
 
@@ -28,7 +30,8 @@ public class AuthorizeController {
 
     @GetMapping("callback")
     public String callback(@RequestParam(name="code") String code,
-                           @RequestParam(name="state") String state){
+                           @RequestParam(name="state") String state,
+                           HttpServletRequest request){
         AccesstokenDTO accesstokenDTO = new AccesstokenDTO();
         accesstokenDTO.setCode(code);
         accesstokenDTO.setRedirect_uri(redirectUri);
@@ -38,6 +41,12 @@ public class AuthorizeController {
         String accessToken = githubProvider.getAccesstoken(accesstokenDTO);
         GithubUser user = githubProvider.getUser(accessToken);
         System.out.print(user.getName());
-        return "index";
+        if(user != null) {
+            //login success
+            request.getSession().setAttribute("user", user);
+        } else {//login failure
+        }
+        return "redirect:/";
+
     }
 }
