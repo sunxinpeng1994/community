@@ -22,7 +22,7 @@
                 <span class="sr-only">SimpleLife42</span>
 
             </button>
-            <a class="navbar-brand" href="#">SimpleLife42</a>
+            <a class="navbar-brand" href="/">SimpleLife42</a>
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
@@ -35,6 +35,9 @@
                 <button type="submit" class="btn btn-default">搜索</button>
             </form>
             <ul class="nav navbar-nav navbar-right">
+                <li th:if="${session.user != null}">
+                    <a href="/publish">发布</a>
+                </li>
                 <li th:if="${session.user == null}"><a
                         href="https://github.com/login/oauth/authorize?client_id=c5da5eca0acb859f0405&redirect_uri=http://localhost:8887/callback&scope=user&state=1">登录</a>
                 </li>
@@ -60,23 +63,25 @@
 
             <h2><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 发起</h2>
             <hr>
-            <form action="">
+            <form action="/publish" method="post">
                 <div class="form-group">
                     <label for="title">问题标题（简单扼要）</label>
-                    <input class="form-control" type="text" id="title" name="title" placeholder="问题标题……">
+                    <input th:value="${title}" class="form-control" type="text" id="title" name="title" placeholder="问题标题……">
                 </div>
                 <div class="form-group">
-                    <label for="title">问题补充（必填，请参照右侧提示）：</label>
-                    <textarea class="form-control" name="description" id="description" cols="30" rows="10"></textarea>
+                    <label for="description">问题补充（必填，请参照右侧提示）：</label>
+                    <textarea th:text="${description}" class="form-control" name="description" id="description" cols="30" rows="10"></textarea>
                 </div>
                 <div class="form-group">
-                    <label for="tag">添加标签</label>
-                    <input class="form-control" type="text" id="tag" name="tag" placeholder="输入标签，以逗号隔开">
+                    <label for="tag">添加标签：</label>
+                    <input th:text="${tag}" class="form-control" type="text" id="tag" name="tag" placeholder="输入标签，以逗号隔开">
                 </div>
+                <span th:if="${error != null}" class="alert alert-danger" th:text="${error}"></span>
+
+                <button type="submit" class="btn btn-success btn-publish">发布</button>
 
             </form>
 
-            <button type="submit" class="btn btn-success btn-publish">发布</button>
 
 
         </div>
@@ -84,8 +89,8 @@
             <h3>问题发起指南</h3>
             <ul>
                 <li>别喷</li>
-                <li>别骂人</li>
-                <li>求同存异</li>
+                <li>别喷</li>
+                <li>别喷</li>
             </ul>
         </div>
     </div>
