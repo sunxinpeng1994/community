@@ -7,19 +7,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import top.simplelife42.community.mapper.QuestionMapper;
-import top.simplelife42.community.mapper.UserMapper;
 import top.simplelife42.community.model.Question;
 import top.simplelife42.community.model.User;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 @Controller
 public class PublishController {
     @Autowired
     private QuestionMapper questionMapper;
-    @Autowired
-    private UserMapper userMapper;
+
     @GetMapping("/publish")
     public  String publish(Model model){
 
@@ -48,20 +45,8 @@ public class PublishController {
             return "publish";
         }
 
+        User user = (User)request.getSession().getAttribute("user");
 
-
-        User user = null;
-        Cookie[] cookies = request.getCookies();
-        for(Cookie cookie : cookies) {
-            if(cookie != null && cookie.getName().equals("token")){
-                String token = cookie.getValue();
-                user = userMapper.findByToken(token);
-                if(user != null) {
-                    request.getSession().setAttribute("user", user);
-                }
-                break;
-            }
-        }
         if(user == null) {
             model.addAttribute("error","用户未登录");
             return "publish";

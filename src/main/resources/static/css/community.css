@@ -21,4 +21,12 @@ body{
     font-weight: normal;
     color:#999;
 }
-/*hello random text*/
+
+.profile-right-nav{
+    margin:15px;
+}
+
+.community-menu{
+    color:#999;
+    font-size: 13px;
+}
