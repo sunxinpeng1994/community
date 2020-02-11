@@ -12,6 +12,7 @@ import top.simplelife42.community.dto.GithubUser;
 import top.simplelife42.community.mapper.UserMapper;
 import top.simplelife42.community.model.User;
 import top.simplelife42.community.provider.GithubProvider;
+import top.simplelife42.community.service.UserService;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -25,8 +26,7 @@ public class AuthorizeController {
     private GithubProvider githubProvider;
 
     @Autowired
-    private UserMapper userMapper;
-
+    private UserService userService;
 
 
     @Value("${github.client.id}")
@@ -58,10 +58,9 @@ public class AuthorizeController {
             user.setToken(token);
             user.setName(githubUser.getName());
             user.setAccountId(String.valueOf(githubUser.getId()));
-            user.setGmtCreate(System.currentTimeMillis());
-            user.setGmtModified(user.getGmtCreate());
             user.setAvatarUrl(githubUser.getAvatar_url());
-            userMapper.insert(user);
+            user.setBio(githubUser.getBio());
+            userService.createOrUpdate(user);
             Cookie cookie = new Cookie("token", token);
             cookie.setMaxAge(60 * 60 * 24 * 30 * 6);
             response.addCookie(cookie);
@@ -75,4 +74,15 @@ public class AuthorizeController {
         return "redirect:/";
 
     }
+    @GetMapping("/logout")
+    public String logout(HttpServletRequest request,
+                         HttpServletResponse response){
+        request.getSession().invalidate();
+        Cookie cookie = new Cookie("token", null);
+        cookie.setMaxAge(0);
+        cookie.setPath("/");
+        response.addCookie(cookie);
+        return "redirect:/";
+    }
+
 }
