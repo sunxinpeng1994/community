@@ -22,9 +22,9 @@ public class PublishController {
     private QuestionService questionService;
 
     @GetMapping("/publish/{id}")
-    public String edit(@PathVariable(name = "id")String id,
+    public String edit(@PathVariable(name = "id")Long id,
                        Model model){
-        QuestionDTO question = questionService.getById(Integer.parseInt(id));
+        QuestionDTO question = questionService.getById(id);
         model.addAttribute("title", question.getTitle());
         model.addAttribute("description", question.getDescription());
         model.addAttribute("tag", question.getTag());
@@ -42,7 +42,7 @@ public class PublishController {
             @RequestParam("title") String title,
             @RequestParam("description") String description,
             @RequestParam("tag") String tag,
-            @RequestParam("questionId") Integer questionId,
+            @RequestParam("questionId") Long questionId,
             HttpServletRequest request,
             Model model){
         model.addAttribute("title", title);

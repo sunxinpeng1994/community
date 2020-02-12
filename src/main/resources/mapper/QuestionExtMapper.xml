@@ -26,4 +26,13 @@
         VIEW_COUNT = VIEW_COUNT + #{viewCount,jdbcType=INTEGER}
         where ID = #{id}
     </update>
+    <update id="incCommentCount" parameterType="top.simplelife42.community.model.Question">
+        <!--
+          increase comment count
+        -->
+        update QUESTION
+        SET
+        COMMENT_COUNT = COMMENT_COUNT + #{commentCount,jdbcType=INTEGER}
+        where ID = #{id}
+    </update>
 </mapper>
