@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import top.simplelife42.community.dto.PaginationDTO;
 import top.simplelife42.community.service.QuestionService;
 
+import javax.servlet.http.HttpServletResponse;
+
 @Controller
 public class IndexController {
 
@@ -19,10 +21,14 @@ public class IndexController {
     @GetMapping("/")
     public String index(Model model,
                         @RequestParam(name="page",defaultValue = "1") Integer page,
-                        @RequestParam(name="size",defaultValue = "5") Integer size){
+                        @RequestParam(name="size",defaultValue = "5") Integer size,
+                        HttpServletResponse response){
         PaginationDTO pagination = questionService.list(page, size);
         model.addAttribute("pagination", pagination);
 
+        response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
+        response.setHeader("Pragma", "no-cache");
+        response.setDateHeader("Expires", -1);
 
         return "index";
     }
