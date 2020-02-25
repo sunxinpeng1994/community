@@ -49,10 +49,10 @@ public class CommentService {
             } else {
                 commentMapper.insert(comment);
                 //增加评论数
-                Comment parentComment = new Comment();
-                parentComment.setId(comment.getParentId());
-                parentComment.setCommentCount(1);
-                commentExtMapper.incCommentCount(parentComment);
+//                Comment parentComment = new Comment();
+//                parentComment.setId(comment.getParentId());
+                dbComment.setCommentCount(1);
+                commentExtMapper.incCommentCount(dbComment);
             }
         } else {//reply to question
             Question question = questionMapper.selectByPrimaryKey(comment.getParentId());
