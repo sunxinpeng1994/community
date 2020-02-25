@@ -30,3 +30,58 @@ body{
     color:#999;
     font-size: 13px;
 }
+
+.commentArea {
+    padding:10px;
+}
+.commentArea-body {
+    padding:12px;
+}
+.commentText {
+    margin:10px 0;
+}
+
+.menu{
+    color:#999;
+    margin-top:8px;
+}
+.menu .icon {
+    margin-right: 6px;
+    font-size: 15px;
+    cursor:pointer;
+}
+.menu .comment-icon {
+    font-size: 15px;
+    cursor:pointer;
+}
+.menu .icon:hover {
+    color:#499ef3;
+}
+.menu .comment-icon:hover {
+    color:#499ef3;
+}
+
+.menu .active {
+    color: #499ef3;
+}
+
+.commentator-name {
+    font-weight: bold;
+}
+
+.sub-comments {
+    border-radius: 5px;
+    margin-top: 10px;
+    border: 1px solid #eee;
+    padding-top: 15px;
+    margin-bottom: 15px;
+}
+
+.sub-comments .btn {
+    margin: 10px 0;
+}
+.comments {
+    padding-bottom: 5px;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #eee;
+}

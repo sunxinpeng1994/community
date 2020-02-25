@@ -5,9 +5,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import top.simplelife42.community.dto.CommentDTO;
 import top.simplelife42.community.dto.QuestionDTO;
-import top.simplelife42.community.mapper.QuestionMapper;
+import top.simplelife42.community.enums.CommentTypeEnum;
+import top.simplelife42.community.service.CommentService;
 import top.simplelife42.community.service.QuestionService;
+
+import java.util.List;
 
 /**
  * @Desc
@@ -17,6 +21,8 @@ import top.simplelife42.community.service.QuestionService;
 @Controller
 public class QuestionController {
     @Autowired
+    private CommentService commentService;
+    @Autowired
     private QuestionService questionService;
     @GetMapping("/question/{id}")
     public String question(@PathVariable(name = "id") Long id,
@@ -24,6 +30,8 @@ public class QuestionController {
 
         questionService.incView(id);
         QuestionDTO questionDTO = questionService.getById(id);
+        List<CommentDTO> comments = commentService.listByQuestionId(id, CommentTypeEnum.QUESTION);
+        model.addAttribute("comments", comments);
         model.addAttribute("question", questionDTO);
         return "question";
     }

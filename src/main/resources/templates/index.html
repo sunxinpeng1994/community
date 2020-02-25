@@ -14,7 +14,15 @@
 <!--            integrity="sha256-BTlTdQO9/fascB1drekrDVkaKd9PkwBymMlHOiG+qLI="-->
 <!--            crossorigin="anonymous"></script>-->
     <script src="js/bootstrap.min.js" type="application/javascript"></script>
-
+    <script type="application/javascript">
+        window.onload = function(){//close current tab if it contains "closable = true"
+            var closable = window.localStorage.getItem("closable");
+            if(closable) {
+                window.close();
+                window.localStorage.removeItem("closable");
+            }
+        }
+    </script>
 
 </head>
 <body>

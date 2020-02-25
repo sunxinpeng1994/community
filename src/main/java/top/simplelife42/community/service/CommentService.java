@@ -1,15 +1,21 @@
 package top.simplelife42.community.service;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import top.simplelife42.community.dto.CommentDTO;
 import top.simplelife42.community.enums.CommentTypeEnum;
 import top.simplelife42.community.exception.CustomizeErrorCode;
 import top.simplelife42.community.exception.CustomizeException;
-import top.simplelife42.community.mapper.CommentMapper;
-import top.simplelife42.community.mapper.QuestionExtMapper;
-import top.simplelife42.community.mapper.QuestionMapper;
-import top.simplelife42.community.model.Comment;
-import top.simplelife42.community.model.Question;
+import top.simplelife42.community.mapper.*;
+import top.simplelife42.community.model.*;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @Desc
@@ -24,7 +30,11 @@ public class CommentService {
     private QuestionMapper questionMapper;
     @Autowired
     private QuestionExtMapper questionExtMapper;
-
+    @Autowired
+    private UserMapper userMapper;
+    @Autowired
+    private CommentExtMapper commentExtMapper;
+    @Transactional
     public void insert(Comment comment) {
         if(comment.getParentId() == null || comment.getParentId() == 0) {
             throw new CustomizeException(CustomizeErrorCode.TARGET_NOT_FOUND);
@@ -38,6 +48,11 @@ public class CommentService {
                 throw new CustomizeException(CustomizeErrorCode.COMMENT_NOT_FOUND);
             } else {
                 commentMapper.insert(comment);
+                //增加评论数
+                Comment parentComment = new Comment();
+                parentComment.setId(comment.getParentId());
+                parentComment.setCommentCount(1);
+                commentExtMapper.incCommentCount(parentComment);
             }
         } else {//reply to question
             Question question = questionMapper.selectByPrimaryKey(comment.getParentId());
@@ -51,6 +66,38 @@ public class CommentService {
 
         }
 
+
+    }
+
+    public List<CommentDTO> listByQuestionId(Long id, CommentTypeEnum type) {
+        CommentExample commentExample = new CommentExample();
+        commentExample.createCriteria().andParentIdEqualTo(id).andTypeEqualTo(type.getType());
+        commentExample.setOrderByClause("gmt_create desc");
+        List<Comment> comments = commentMapper.selectByExample(commentExample);
+
+        if(comments.size() == 0) {
+            return new ArrayList<>();
+        } else {
+            //获取去重后的评论人id
+            Set<Long> commentators = comments.stream().map(comment -> comment.getCommentator()).collect(Collectors.toSet());
+            UserExample userExample = new UserExample();
+            List<Long> userIds = new ArrayList<>();
+            userIds.addAll(commentators);
+            //获取评论人的map，降低搜索复杂度
+            userExample.createCriteria().andIdIn(userIds);
+            List<User> users = userMapper.selectByExample(userExample);
+            Map<Long, User> userMap = users.stream().collect(Collectors.toMap(user -> user.getId(), user -> user));
+            //遍历搜索到的评论，添加评论者
+            List<CommentDTO> commentDTOS = comments.stream().map(comment -> {
+                CommentDTO commentDTO = new CommentDTO();
+                BeanUtils.copyProperties(comment,commentDTO);
+                commentDTO.setUser(userMap.get(comment.getCommentator()));
+                return commentDTO;
+
+            }).collect(Collectors.toList());
+            return commentDTOS;
+
+        }
 
     }
 }
