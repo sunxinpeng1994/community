@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import top.simplelife42.community.dto.PaginationDTO;
 import top.simplelife42.community.model.User;
+import top.simplelife42.community.service.NotificationService;
 import top.simplelife42.community.service.QuestionService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,6 +18,8 @@ public class ProfileController {
 
     @Autowired
     private QuestionService questionService;
+    @Autowired
+    private NotificationService notificationService;
     @GetMapping("/profile/{action}")
     public String profile(@PathVariable(name="action") String action,
                           Model model,
@@ -29,14 +32,21 @@ public class ProfileController {
             return "redirect:/";
         }
         if(action.equals("questions")) {
+            Long unreadCount = notificationService.unreadCount(user.getId());
             model.addAttribute("section", "questions");
             model.addAttribute("sectionName","我的提问");
+            PaginationDTO pagination = questionService.list(user.getId(), page, size);
+            model.addAttribute("pagination", pagination);
+            model.addAttribute("unreadCount", unreadCount);
         } else if (action.equals("replies")){
+            PaginationDTO paginationDTO = notificationService.list(user.getId(), page, size);
+            Long unreadCount = notificationService.unreadCount(user.getId());
             model.addAttribute("section", "replies");
             model.addAttribute("sectionName","最新回复");
+            model.addAttribute("pagination", paginationDTO);
+            model.addAttribute("unreadCount", unreadCount);
         }
-        PaginationDTO pagination = questionService.list(user.getId(), page, size);
-        model.addAttribute("pagination", pagination);
+
         return "profile";
     }
 }
