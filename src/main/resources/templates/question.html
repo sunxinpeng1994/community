@@ -8,10 +8,16 @@
     <link rel="stylesheet" href="/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/bootstrap-theme.min.css">
     <link rel="stylesheet" href="/css/community.css">
+    <link rel="stylesheet" href="/css/editormd.min.css">
+
+    <link rel="stylesheet" href="/css/editormd.preview.min.css">
+
     <script src="/js/jquery-3.4.1.min.js" type="application/javascript"></script>
     <script src="/js/bootstrap.min.js" type="application/javascript"></script>
     <script src="/js/community.js" type="application/javascript"></script>
     <script src="/js/moment.js" type="application/javascript"></script>
+    <head th:insert="~{import :: markdown}"></head>
+
 </head>
 <body>
 <div th:insert="navigation :: nav"></div>
@@ -32,7 +38,18 @@
                 </span>
 <!--                描述-->
                 <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" th:text="${question.getDescription()}"/>
+
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" id="question-view">
+                    <textarea style="display: none"
+                              name="" id="" cols="30" rows="10"
+                              th:text="${question.getDescription()}">
+                    </textarea>
+                </div>
+                <script type="text/javascript">
+                    $(function () {
+                        editormd.markdownToHTML("question-view", {});
+                    });
+                </script>
 <!--                标签-->
                 <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -103,12 +120,12 @@
                 <div class="media commentArea">
                     <div class="media-left">
                         <a href="#">
-                            <img class="media-object img-rounded" th:src="${question.user.getAvatarUrl()}">
+                            <img class="media-object img-rounded" th:src="${session.user != null ? session.user.getAvatarUrl() : '/img/avatar.png'}">
                         </a>
                     </div>
                     <div class="media-body commentArea-body">
                         <h5 class="media-heading">
-                            <span th:text="${question.getUser().getName()}"></span>
+                            <span th:text="${session.user != null ? session.user.getName() : '游客'}"></span>
                         </h5>
 
                     </div>

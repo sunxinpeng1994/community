@@ -11,6 +11,8 @@
 
     <script src="/js/bootstrap.min.js" type="application/javascript"></script>
     <script src="/js/community.js" type="application/javascript"></script>
+    <head th:insert="~{import :: markdown}"></head>
+
 
 
 </head>
@@ -27,14 +29,32 @@
             <hr>
             <form action="/publish" method="post">
                 <input type="hidden" name="questionId" th:value="${questionId}">
-                <div class="form-group">
+                <div class="form-group" >
                     <label for="title">问题标题（简单扼要）</label>
                     <input th:value="${title}" class="form-control" type="text" id="title" name="title" placeholder="问题标题……">
                 </div>
-                <div class="form-group">
+                <div class="form-group" id="question-editor">
                     <label for="description">问题补充（必填，请参照右侧提示）：</label>
-                    <textarea th:text="${description}" class="form-control" name="description" id="description" cols="30" rows="10"></textarea>
+                    <textarea th:text="${description}"
+                              style="display: none;"
+                              class="form-control" name="description" id="description" cols="30" rows="10"></textarea>
                 </div>
+                <script type="text/javascript">
+                    $(function() {
+                        var editor = editormd("question-editor", {
+                            width  : "100%",
+                            height : 350,
+                            path   : "/js/lib/",
+                            delay  : 0,
+                            watch  : false,
+                            placeholder : "请输入问题描述",
+                            imageUpload          : true,          // Enable/disable upload
+                            imageFormats         : ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+                            imageUploadURL       : "/file/upload",             // Upload url
+
+                        });
+                    });
+                </script>
                 <div class="form-group">
                     <label for="tag">添加标签：</label>
                     <input th:value="${tag}" onclick="showSelectTag()" autocomplete="off" class="form-control" type="text" id="tag" name="tag" placeholder="选择标签">

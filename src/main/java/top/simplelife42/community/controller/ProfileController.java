@@ -32,19 +32,19 @@ public class ProfileController {
             return "redirect:/";
         }
         if(action.equals("questions")) {
-            Long unreadCount = notificationService.unreadCount(user.getId());
+//            Long unreadCount = notificationService.unreadCount(user.getId());
             model.addAttribute("section", "questions");
             model.addAttribute("sectionName","我的提问");
             PaginationDTO pagination = questionService.list(user.getId(), page, size);
             model.addAttribute("pagination", pagination);
-            model.addAttribute("unreadCount", unreadCount);
+//            model.addAttribute("unreadCount", unreadCount);
         } else if (action.equals("replies")){
             PaginationDTO paginationDTO = notificationService.list(user.getId(), page, size);
-            Long unreadCount = notificationService.unreadCount(user.getId());
+//            Long unreadCount = notificationService.unreadCount(user.getId());
             model.addAttribute("section", "replies");
             model.addAttribute("sectionName","最新回复");
             model.addAttribute("pagination", paginationDTO);
-            model.addAttribute("unreadCount", unreadCount);
+//            model.addAttribute("unreadCount", unreadCount);
         }
 
         return "profile";
