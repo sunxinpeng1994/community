@@ -1,6 +1,7 @@
 package top.simplelife42.community.controller;
 
 
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.validator.constraints.pl.REGON;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,6 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.UUID;
 
 @Controller
+@Slf4j
 public class AuthorizeController {
 
     @Autowired
@@ -70,6 +72,7 @@ public class AuthorizeController {
 
 
         } else {//login failure
+            log.error("callback get github error, {}", githubUser);
         }
         return "redirect:/";
 
