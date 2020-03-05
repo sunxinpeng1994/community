@@ -29,9 +29,9 @@ public class IndexController {
         model.addAttribute("pagination", pagination);
         model.addAttribute("search", search);
 
-        response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
-        response.setHeader("Pragma", "no-cache");
-        response.setDateHeader("Expires", -1);
+//        response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
+//        response.setHeader("Pragma", "no-cache");
+//        response.setDateHeader("Expires", -1);
 
         return "index";
     }

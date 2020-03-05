@@ -48,9 +48,9 @@ public class ProfileController {
             model.addAttribute("pagination", paginationDTO);
 //            model.addAttribute("unreadCount", unreadCount);
         }
-        response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
-        response.setHeader("Pragma", "no-cache");
-        response.setDateHeader("Expires", -1);
+//        response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
+//        response.setHeader("Pragma", "no-cache");
+//        response.setDateHeader("Expires", -1);
         return "profile";
     }
 }
