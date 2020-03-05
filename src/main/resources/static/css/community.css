@@ -127,3 +127,10 @@ body{
 .tab-content {
     padding:10px 5px;
 }
+
+.footer{
+    padding: 10px 0;
+    text-align: center;
+    color: #666;
+    font-size: 14px;
+}
