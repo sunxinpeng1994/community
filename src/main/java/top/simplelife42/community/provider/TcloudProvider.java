@@ -31,11 +31,11 @@ public class TcloudProvider {
     @Value("${tcloud.secretKey}")
     private String secretKey;
 
-    public COSCredentials cred;
-    public ClientConfig clientConfig;
+    //public COSCredentials cred;
+    //public ClientConfig clientConfig;
     public COSClient cosClient;
     public String bucketName = "simplelife42-1301432860";
-
+    public String regionName = "ap-chengdu";
     //无参构造
     @Autowired
     public TcloudProvider() {
@@ -59,16 +59,16 @@ public class TcloudProvider {
     }
     //上传图片
     public String uploadFile2Cos(MultipartFile file) throws Exception {
-        this.cred = new BasicCOSCredentials(secretId, secretKey);
-        this.clientConfig = new ClientConfig(new Region("ap-chengdu"));
+        COSCredentials cred = new BasicCOSCredentials(secretId, secretKey);
+        ClientConfig clientConfig = new ClientConfig(new Region(regionName));
         this.cosClient = new COSClient(cred, clientConfig);
         if (file.getSize() > 10 * 1024 * 1024) {
             throw new CustomizeException(CustomizeErrorCode.UPLOAD_IMAGE_TOO_BIG);
         }
         String originalFilename = file.getOriginalFilename();
-        String suffix = originalFilename.substring(originalFilename.lastIndexOf(".")).toLowerCase();
+        //String suffix = originalFilename.substring(originalFilename.lastIndexOf(".")).toLowerCase();
         Random random = new Random();
-        String nameOriginal = originalFilename.substring(0, originalFilename.lastIndexOf("."));
+        //String nameOriginal = originalFilename.substring(0, originalFilename.lastIndexOf("."));
         String name = random.nextInt(10000) + System.currentTimeMillis()+ "-" + originalFilename;
         try {
             InputStream inputStream = file.getInputStream();
@@ -79,8 +79,8 @@ public class TcloudProvider {
         }
     }
     //获得图片路径
-    public String getImgUrl(String fileUrl) {
-        return getUrl(fileUrl);
+    public String getImgUrl(String fileName) {
+        return getUrl(fileName);
     }
     public String getUrl(String key) {
         // 设置URL过期时间为10年 3600l* 1000*24*365*10

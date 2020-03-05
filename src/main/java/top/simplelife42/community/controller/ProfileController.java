@@ -12,6 +12,7 @@ import top.simplelife42.community.service.NotificationService;
 import top.simplelife42.community.service.QuestionService;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 @Controller
 public class ProfileController {
@@ -25,7 +26,8 @@ public class ProfileController {
                           Model model,
                           HttpServletRequest request,
                           @RequestParam(name="page",defaultValue = "1") Integer page,
-                          @RequestParam(name="size",defaultValue = "5") Integer size){
+                          @RequestParam(name="size",defaultValue = "5") Integer size,
+                          HttpServletResponse response){
 
         User user = (User)request.getSession().getAttribute("user");
         if(user == null) {
@@ -46,7 +48,9 @@ public class ProfileController {
             model.addAttribute("pagination", paginationDTO);
 //            model.addAttribute("unreadCount", unreadCount);
         }
-
+        response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
+        response.setHeader("Pragma", "no-cache");
+        response.setDateHeader("Expires", -1);
         return "profile";
     }
 }

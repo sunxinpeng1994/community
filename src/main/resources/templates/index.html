@@ -54,25 +54,25 @@
                     <ul class="pagination">
 
                         <li th:if="${pagination.showFirstPage}">
-                            <a th:href="@{/(page=1)}" aria-label="First" title="首页">
+                            <a th:href="@{/(page=1, search=${search})}" aria-label="First" title="首页">
                                 <span aria-hidden="true">&lt;&lt;</span>
                             </a>
                         </li>
                         <li th:if="${pagination.showPrevious}">
-                            <a th:href="@{/(page=${pagination.getPage() - 1})}" aria-label="Previous" title="上一页">
+                            <a th:href="@{/(page=${pagination.getPage() - 1}, search=${search})}" aria-label="Previous" title="上一页">
                                 <span aria-hidden="true">&lt;</span>
                             </a>
                         </li>
                         <li th:each="page : ${pagination.getPages()}" th:class="${pagination.page == page}? 'active' : '' ">
-                            <a th:href="@{/(page=${page})}" th:text="${page}" ></a>
+                            <a th:href="@{/(page=${page}, search=${search})}" th:text="${page}" ></a>
                         </li>
                         <li th:if="${pagination.showNext}">
-                            <a th:href="@{/(page=${pagination.getPage() + 1})}" aria-label="Next" title="下一页">
+                            <a th:href="@{/(page=${pagination.getPage() + 1}, search = ${search})}" aria-label="Next" title="下一页">
                                 <span aria-hidden="true">&gt;</span>
                             </a>
                         </li>
                         <li th:if="${pagination.showEndPage}">
-                            <a th:href="@{/(page=${pagination.getTotalPage()})}" aria-label="Last" title="末页">
+                            <a th:href="@{/(page=${pagination.getTotalPage()}, search=${search})}" aria-label="Last" title="末页">
                                 <span aria-hidden="true">&gt;&gt;</span>
                             </a>
                         </li>

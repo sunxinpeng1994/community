@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import top.simplelife42.community.dto.PaginationDTO;
 import top.simplelife42.community.dto.QuestionDTO;
+import top.simplelife42.community.dto.QuestionQueryDTO;
 import top.simplelife42.community.exception.CustomizeErrorCode;
 import top.simplelife42.community.exception.CustomizeException;
 import top.simplelife42.community.mapper.QuestionExtMapper;
@@ -30,9 +31,18 @@ public class QuestionService {
     @Autowired
     private QuestionExtMapper questionExtMapper;
 
-    public PaginationDTO list(Integer page, Integer size) {
+    public PaginationDTO list(String search, Integer page, Integer size) {
+        if(StringUtils.isNotBlank(search)){
+            String[] tags = StringUtils.split(search, ' ');
+            search = Arrays.stream(tags).collect(Collectors.joining("|"));
+        }
+
         PaginationDTO paginationDTO = new PaginationDTO();
-        Integer totalCount = (int)questionMapper.countByExample(new QuestionExample());
+        QuestionQueryDTO questionQueryDTO = new QuestionQueryDTO();
+
+        questionQueryDTO.setSearch(search);
+
+        Integer totalCount = (int)questionExtMapper.countBySearch(questionQueryDTO);
         Integer totalPage;
         totalPage = (int)Math.ceil((double)totalCount/size);
         if(page < 1) {
@@ -46,10 +56,11 @@ public class QuestionService {
 
         Integer offSet = (page - 1)*size;
 
-        QuestionExample questionExample = new QuestionExample();
-        questionExample.setOrderByClause("gmt_create desc");
-
-        List<Question> questions = questionMapper.selectByExampleWithBLOBsWithRowbounds(questionExample, new RowBounds(offSet, size));
+//        QuestionExample questionExample = new QuestionExample();
+//        questionExample.setOrderByClause("gmt_create desc");
+        questionQueryDTO.setPage(offSet);
+        questionQueryDTO.setSize(size);
+        List<Question> questions = questionExtMapper.selectBySearch(questionQueryDTO);
         List<QuestionDTO> questionDTOList = new ArrayList<>();
 
         for(Question question : questions) {
