@@ -29,10 +29,14 @@ public class SessionInterceptor implements HandlerInterceptor {
     private NotificationService notificationService;
     @Value("${github.redirect.uri}")
     private String redirectUri;
+
+    @Value("${github.client.id}")
+    private String clientId;
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         //设置 context 级别的属性
         request.getServletContext().setAttribute("redirectUri", redirectUri);
+        request.getServletContext().setAttribute("clientId", clientId);
         Cookie[] cookies = request.getCookies();
         if(cookies != null && cookies.length > 0) {
             for(Cookie cookie : cookies) {
